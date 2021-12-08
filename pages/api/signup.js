@@ -5,8 +5,6 @@ const Joi = require('joi')
 const handler = nc();
 
 
-
-
 handler.post( async (req, res) => {
     let result = {}
     let statusCode 

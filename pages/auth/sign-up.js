@@ -1,4 +1,5 @@
 import { Formik } from "formik"
+import Link from "next/link"
 import axios from "axios"
 import { useRouter } from "next/router"
 const emailRegExp = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
@@ -43,7 +44,7 @@ export default function SignUp(){
                     onSubmit={values => {
                             console.log('values' , values)
 
-                            axios.post('http://localhost:3000/api/signup' ,values)
+                            axios.post( process.env.API_HOST + '/api/signup' ,values)
                                 .then(res => {
                                     console.log(res)
                                     alert('회원가입을 축하드립니다.')
@@ -128,9 +129,11 @@ export default function SignUp(){
 
                 <div className="text-grey-dark mt-6 mb-6">
                     이미 회원가입을 하셨나요?  
-                    <a className="no-underline border-b border-blue text-blue" href="../login/">
+                    <Link href="/auth/sign-in">
+                    <a className="no-underline border-b border-blue text-blue" >
                          로그인
                     </a>
+                    </Link>
                 </div>
             </div>
         </div>
