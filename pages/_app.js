@@ -10,14 +10,14 @@ function MyApp({ Component, pageProps }) {
   useEffect( ()=> {
     const cookies = new Cookies();
     const token = cookies.get('cdt');
-    console.log(`token : ${token}`);
-    axios('/api/auth', {
+   
+    axios(process.env.API_HOST + '/api/auth', {
       'method' : 'get',
       'headers' : {
         'Authorization' : `Bearer ${token}`
       }            
     }).then(res => {
-      console.log(res)
+      console.log(res.data.token)
     }).catch(err => {
       console.log(err);
     })

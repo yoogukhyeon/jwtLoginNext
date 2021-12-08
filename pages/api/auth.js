@@ -35,8 +35,9 @@ handler.get( async (req , res) => {
                     console.log(email);
 
                     let tokenSql = ""
-                    tokenSql += "select no , name , email from sample_sign_up where email = ? and token = ?"
-
+                    tokenSql += "select no , name , email , "
+                    tokenSql += "date_format(reg_date , '%Y-%m-%d') as regDate "
+                    tokenSql += "from sample_sign_up where email = ? and token = ? "
             
                     let siupUpData = await executeQuery(tokenSql , [email , token]);
 
@@ -44,7 +45,8 @@ handler.get( async (req , res) => {
 
                     result = {
                         data : siupUpData,
-                        msg : 'success'
+                        msg : 'success',
+                        token : token
                     }
 
                     res.statusCode = 200;
