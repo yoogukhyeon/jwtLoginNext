@@ -14,3 +14,8 @@ a {
 * {
   box-sizing: border-box;
 }
+.btn-link {
+  text-decoration: none;
+  font-weight: bold;
+  color: black;
+}

@@ -14,35 +14,39 @@ handler.get( async (req , res) => {
     try{
         //받아온 토큰값 
         const authToken = req.headers.authorization;
-
+       
         // 첫번쨰 방식
         /* if(authToken){
             const token = authToken.split('Bearer ')[1];
             console.log(token);
             
         }*/
-
         // 두번쨰 방식
         if(authToken.startsWith('Bearer ')){
             const token = authToken.split(' ')[1];
-            
+            console.log(`token : ${token}`);
+            if(token == undefined){
+                result = {
+                    msg : 'fail',
+                }
+
+                res.statusCode = 400;
+                res.send(result)
+            }
             jwt.verify(token , jwtSecretKey , async (err , decoded) => {
                 if(err){
                     console.error(err)
                 }else{
-                    console.log(decoded)
                     const email = decoded.email;
-                    console.log(email);
 
                     let tokenSql = ""
                     tokenSql += "select no , name , email , "
                     tokenSql += "date_format(reg_date , '%Y-%m-%d') as regDate "
-                    tokenSql += "from sample_sign_up where email = ? and token = ? "
+                    tokenSql += "from sample_sign_up where email = ? and token = ? limit 1"
             
                     let siupUpData = await executeQuery(tokenSql , [email , token]);
-
                     console.log(siupUpData)
-
+                    siupUpData = siupUpData[0]
                     result = {
                         data : siupUpData,
                         msg : 'success',
@@ -54,7 +58,7 @@ handler.get( async (req , res) => {
                 }
             })
         }
-    
+        
     }catch(e){
         res.statusCode = 500;
         throw err
