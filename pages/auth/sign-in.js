@@ -42,16 +42,25 @@ export default function SignIn(){
                             console.log(values)
                             axios.post(`${process.env.API_HOST}/api/signin` , values)
                                  .then(res => {
-                                     console.log(res)
                                     if(res.data.msg === "success"){
                                         alert('로그인 성공')
                                         //받아온 토큰값 쿠키 값으로
-                                        console.log('로그인 데이터')
-                                        console.log(res.data);
+                                 
                                         const token = res.data.data.token;
                                         const cookies = new Cookies();
                                         cookies.set('cdt', token, {path: '/'})
-                                        router.push('/')
+                                        
+                                        setAuth(auth => ({...auth , token}))
+                                        axios(process.env.API_HOST + '/api/auth', {
+                                            'method' : 'get',
+                                            'headers' : {
+                                              'Authorization' : `Bearer ${token}`
+                                            }            
+                                          }).then(res => setAuth(auth => ({...auth , user : res.data.data})))
+                                          .catch(err => {
+                                              console.error(err)
+                                          })
+                                        router.push(router.query.ref ?? '/me')
                                     }
                                     if(res.data.msg === "fail"){
                                         alert('로그인 실패')
