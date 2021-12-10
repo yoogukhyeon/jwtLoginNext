@@ -9,10 +9,12 @@ export default function Header({children}){
    const router = useRouter()
    const [auth , setAuth] = useAtom(authAtom)
 
+
+
     const logOut = useCallback(() => {
         const cookies = new Cookies();
         cookies.remove('cdt')
-        setAuth( auth => ({...auth, token : null, user : null}))
+        setAuth( auth => ({...auth, token : null, user : null , loaded : false}))
         delete axios.defaults.headers.common.Authorization;
         router.push('/')
     }, [])
@@ -27,6 +29,9 @@ export default function Header({children}){
                     <div className="flex flex-row">
                         <Link href="/">
                             <a className="btn btn-link">홈</a>
+                        </Link>
+                        <Link href="/articles">
+                                <a className="btn btn-link">게시판</a>
                         </Link>
                         <Link href="/me">
                                 <a className="btn btn-link">내정보</a>

@@ -50,17 +50,17 @@ export default function SignIn(){
                                         const cookies = new Cookies();
                                         cookies.set('cdt', token, {path: '/'})
                                         
-                                        setAuth(auth => ({...auth , token}))
+                                        //setAuth(auth => ({...auth , token}))
                                         axios(process.env.API_HOST + '/api/auth', {
                                             'method' : 'get',
                                             'headers' : {
                                               'Authorization' : `Bearer ${token}`
                                             }            
-                                          }).then(res => setAuth(auth => ({...auth , user : res.data.data})))
+                                          }).then(res => setAuth(auth => ({...auth , token:token, user : res.data.data})))
                                           .catch(err => {
                                               console.error(err)
-                                          })
-                                        router.push(router.query.ref ?? '/me')
+                                          }).finally(() => setAuth(auth => ({...auth , loaded : true})))
+                                        router.push(router.query.ref ?? '/')
                                     }
                                     if(res.data.msg === "fail"){
                                         alert('로그인 실패')

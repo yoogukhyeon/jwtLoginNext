@@ -9,32 +9,33 @@ import authAtom from '../stores/authAtom';
 
 function MyApp({ Component, pageProps }) {
   //사용자 profile 
-  const [profile , setProfile] = useState([])
   const [ , setAuth] = useAtom(authAtom)
   //받아온 토큰값 Bearer 토큰값으로 서버에 보내주기
+  const cookies = new Cookies();
+  const token = cookies.get('cdt');
   useEffect( ()=> {
-    const cookies = new Cookies();
-    const token = cookies.get('cdt');
-    axios(process.env.API_HOST + '/api/auth', {
-      'method' : 'get',
-      'headers' : {
-        'Authorization' : `Bearer ${token}`
-      }            
-    }).then(res => {
-      //받아온 정보값 상태관리
-      console.log(res.data.data);
-      setAuth(state => {
-        return {
-          ...state,
-          token : token,
-          user : res.data.data
-        }
-      })
-      setProfile(res.data.data)
+    if(token){
+      axios(process.env.API_HOST + '/api/auth', {
+        'method' : 'get',
+        'headers' : {
+          'Authorization' : `Bearer ${token}`
+        }            
+      }).then(res => {
+        //받아온 정보값 상태관리
+        console.log(res.data.data);
+        setAuth(state => {
+          return {
+            ...state,
+            token : token,
+            user : res.data.data
+          }
+        })
+      
 
-    }).catch(err => {
-      console.log(err);
-    }).finally(() => setAuth(auth => ({...auth , loaded : true})))
+      }).catch(err => {
+        console.log(err);
+      }).finally(() => setAuth(auth => ({...auth , loaded : true})))
+    }
   }, []);
 
 

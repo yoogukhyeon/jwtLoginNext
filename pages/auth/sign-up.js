@@ -94,7 +94,7 @@ export default function SignUp(){
                         onChange={handleChange}
                         onBlur={handleBlur}
                         />
-                        </div>
+                    </div>      
                         <p className="text-danger pl-2">{errors.email && touched.email && errors.email}</p>
                     <div>
                     <label htmlFor="password" className="text-xl py-2">비밀번호</label>
