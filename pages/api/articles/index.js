@@ -8,7 +8,7 @@ handler.post( async (req , res) => {
     let result = {}
     let statusCode 
     let msg = "fail"
-    let data
+   
     const {no , title , content} = req.body
  
     try{
@@ -21,7 +21,6 @@ handler.post( async (req , res) => {
         result = {
             msg : "success",
             statusCode : 200,
-            data : articleData
         }
 
         res.send({result})

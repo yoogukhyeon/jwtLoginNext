@@ -40,9 +40,6 @@ export default function ArticleForm(){
                                 router.back()
                              }
 
-
-
-                             
                          }).catch(err => {
                              console.error(err)
                              alert(err.res?.data?.message ?? err.message ?? '서버와 통신에 실패했습니다.')
