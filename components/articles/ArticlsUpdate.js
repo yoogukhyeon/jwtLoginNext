@@ -15,6 +15,9 @@ export default function ArticleUpdate({id}){
    useEffect(() => {
        setDate(data?.data[0])
    })
+   
+
+   const title = JSON.stringify(data?.data[0]?.title)
    console.log('123123')
    console.log(set)
     return(
@@ -24,7 +27,7 @@ export default function ArticleUpdate({id}){
             <hr />
             <Formik 
                 initialValues={{
-                    title : '',
+                    title : `${title}`,
                     content : '',
                 }}
                 validate={values => {
