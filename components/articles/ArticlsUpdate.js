@@ -1,25 +1,13 @@
 import {Formik} from "formik";
 import { useEffect, useState } from "react";
 import useFetch from "../../hooks/useFetch"
-export default function ArticleUpdate({id}){
+export default function ArticleUpdate({id , article}){
     console.log('update id')
     console.log(id)
 
-    const {data ,error} = useFetch(`${process.env.API_HOST}/api/articles/${id}`)
-    if(error){
-        return <>데이터 로드에 실패 했습니다.</>
-    }
- 
-   const [set , setDate ] = useState([])
 
-   useEffect(() => {
-       setDate(data?.data[0])
-   })
-   
-
-   const title = JSON.stringify(data?.data[0]?.title)
-   console.log('123123')
-   console.log(set)
+    console.log('article')
+    console.log(article)
     return(
         <div className="container">
             <h1 className="font-bold mb-3 text-xl">글수정</h1>
@@ -27,8 +15,8 @@ export default function ArticleUpdate({id}){
             <hr />
             <Formik 
                 initialValues={{
-                    title : `${title}`,
-                    content : '',
+                    title : article.title,
+                    content : article.content,
                 }}
                 validate={values => {
                     let errors = {};
@@ -57,7 +45,7 @@ export default function ArticleUpdate({id}){
                    isSubmitting
                 }) => (
                         
-                        <form onSubmit={handleSubmit}>
+                        <form onSubmit={handleSubmit} className="mt-3">
                             <div className="mb-3">
                                 <label htmlFor="title" className="form-label">제목</label>
                                 <input type="text" 

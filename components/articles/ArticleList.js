@@ -28,7 +28,7 @@ export default function ArticleList({title}){
     const Delete = useCallback((id , e) => {
         e.preventDefault();
         if(!confirm('정말로 삭제 하시겠습니까?')) return false
-        axios.put(`${process.env.API_HOST}/api/articles/${id}`)
+        axios.delete(`${process.env.API_HOST}/api/articles/${id}`)
              .then(res => {
                  console.log('delte 로직')
                  console.log(res)

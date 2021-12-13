@@ -35,7 +35,7 @@ handler.get( async(req , res) => {
 
 
 
-handler.put(async (req , res) => {
+handler.delete(async (req , res) => {
 
         const id = req.query.id
         console.log(id)
