@@ -1,5 +1,5 @@
 import useFetch from "../../hooks/useFetch"
-
+import Link from "next/link"
 export default function ArticleView({id}){
     const {data ,error} = useFetch(`${process.env.API_HOST}/api/articles/${id}`)
     if(error){
@@ -32,6 +32,11 @@ export default function ArticleView({id}){
                 </figcaption>
             </div>
         </figure>
+        <div className="mt-3">
+            <Link href="/articles">
+                <a className="btn btn-info text-white">뒤로가기</a>
+            </Link>
+        </div>
         </div>   
     )
 }

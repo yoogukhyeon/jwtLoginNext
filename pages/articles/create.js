@@ -17,12 +17,9 @@ export default function CreatePage(){
 
 
 export const getServerSideProps = async ({req ,res , resolvedUrl}) => {
-    console.log(req.headers);
     const cookies = new Cookies(req.headers.cookie);
-    console.log('cookies')
-    console.log(cookies)
     const token = cookies.get('cdt');
-    console.log(token)
+   
     if(token){
         return {
             props: {

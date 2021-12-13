@@ -1,4 +1,5 @@
 import {Formik} from "formik";
+import Link from "next/link"
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useAtom } from "jotai";
@@ -85,7 +86,13 @@ export default function ArticleForm(){
                                 />
                                  <p className="text-danger mt-2">{errors.content && touched.content && errors.content}</p>
                             </div>
+                            <div className="flex flex-row justify-between ">
+                            <Link href="/articles">
+                                <a className="btn btn-info text-white">뒤로가기</a>
+                            </Link>
                             <button type="submit" className="btn btn-primary">글 올리기</button>
+                            </div>
+                          
                         </form>
                 )}
             </Formik>
