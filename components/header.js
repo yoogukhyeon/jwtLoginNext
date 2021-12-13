@@ -28,13 +28,13 @@ export default function Header({children}){
                     </Link>
                     <div className="flex flex-row">
                         <Link href="/">
-                            <a className="btn btn-link">홈</a>
+                            <a className="btn btn-link mr-2">홈</a>
                         </Link>
                         <Link href="/articles">
-                                <a className="btn btn-link">게시판</a>
+                                <a className="btn btn-link mr-2">게시판</a>
                         </Link>
                         <Link href="/me">
-                                <a className="btn btn-link">내정보</a>
+                                <a className="btn btn-link mr-2">내정보</a>
                         </Link>
                     
                         {!auth ? (

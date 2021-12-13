@@ -12,9 +12,7 @@ export default function ViewPage({id , article}){
 export const getServerSideProps = async ({params , req , res , resolvedUrl}) => {
     const {id} = params;
     const cookies = new Cookies(req.headers.cookie);
-    console.log('cookies :::::::::::::::' , cookies);
     const token = cookies.get('cdt');
-    console.log('token ::::::::::::' , token)
     const getDate = await axios.get(`${process.env.API_HOST}/api/articles/${id}`);
     const serverDate =  getDate.data?.data[0]
 
