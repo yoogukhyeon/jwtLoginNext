@@ -1,8 +1,12 @@
 import { Formik } from "formik"
-
+import axios from "axios"
+import { useAtom } from "jotai"
+import authAtom from "../../stores/authAtom"
+import { useRouter } from "next/router"
 const nameRegExp = /^[가-힣\s]+$/
 const phoneExp = /^[0-9]+$/
 export default function PrtnerView(){
+    const router = useRouter()
     return(
         <div className="container">
             <h1 className="font-bold mb-3 text-xl">입사 & 채용</h1>
@@ -38,6 +42,7 @@ export default function PrtnerView(){
 
             <Formik
                 initialValues={{
+                    
                     name : "",
                     phone : "",
                     sort : "",
@@ -70,8 +75,15 @@ export default function PrtnerView(){
                     return errors;
                 }}
                 onSubmit={values => {
-                    console.log('partner 정보')
-                    console.log(values)
+                    axios.post(`${process.env.API_HOST}/api/partner/partnerInsert` , values)
+                         .then(res => {
+                            if(res.data === "success"){
+                                alert('문의내용 접수를 완료했습니다.')
+                                router.reload()
+                            }
+                         }).catch(err => {
+                             console.error(err)
+                         })
                 }}
             >
                 {({
@@ -252,12 +264,6 @@ export default function PrtnerView(){
 
 
             </Formik>
-
-
-
-
-         
-
 
         </div>
       </div>
