@@ -20,7 +20,7 @@ handler.post(async(req , res) => {
 
     try{
         const schema = Joi.object({
-            name : Joi.string().pattern(new RegExp(/^[가-힣]{2,4}|[a-zA-Z]{2,12}/)).required(),
+            name : Joi.string().pattern(new RegExp(/^[가-힣\s]+$/)).required(),
             phone : Joi.string().min(1).max(12).pattern(new RegExp(/^[0-9]+$/)).required(),
             sort : Joi.string().valid('join' , 'partner' , 'private').required(),
             content : Joi.string().required(),
