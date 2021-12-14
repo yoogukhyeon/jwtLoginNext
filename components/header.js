@@ -30,6 +30,9 @@ export default function Header({children}){
                         <Link href="/">
                             <a className="btn btn-link mr-2">홈</a>
                         </Link>
+                        <Link href="/partner">
+                            <a className="btn btn-link mr-2">입사 & 문의</a>
+                        </Link>
                         <Link href="/articles">
                                 <a className="btn btn-link mr-2">게시판</a>
                         </Link>
