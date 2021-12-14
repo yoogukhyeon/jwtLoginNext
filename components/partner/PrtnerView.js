@@ -54,17 +54,21 @@ export default function PrtnerView(){
                     if(!values.name){
                         errors.name = "이름을 입력해주세요."
                     }else if(!nameRegExp.test(values.name)){
+                        values.name = " "
                         errors.name = "한글이름만 입력가능 합니다."
                     }
 
                     if(!values.phone){
                         errors.phone = "핸드폰 번호를 입력해주세요.";
+                    }else if(values.phone.length >= 12){
+                        values.phone = " "
+                        errors.phone = "12자리 이하로 핸드번 번호를 입력해주세요.";
+                        
                     }else if(!phoneExp.test(values.phone)){
                         errors.phone = "숫자만 입력가능 합니다.";
                     }
 
                     if(!values.sort){
-                       
                         errors.sort = "문의 유형을 선택해주세요.";
                     }
 
@@ -81,6 +85,12 @@ export default function PrtnerView(){
                                 alert('문의내용 접수를 완료했습니다.')
                                 router.reload()
                             }
+
+                            if(res.data === "fail"){
+                                alert('문의정보를 정확히 입력해주세요.')
+                                return false
+                            }
+                           
                          }).catch(err => {
                              console.error(err)
                          })

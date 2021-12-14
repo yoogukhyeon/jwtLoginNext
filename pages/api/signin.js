@@ -27,8 +27,7 @@ handler.post( async (req , res) => {
 
             //로그인 성공시 토큰 생성
             let token = jwt.sign({email : email} , jwtSecretKey , {expiresIn : '10d'})
-            console.log('token' , token)
-
+       
             //토큰 생성후 데이터 베이스 저장
             let signToken = "";
             signToken = "update sample_sign_up set token = ? where email = ? and no = ?"

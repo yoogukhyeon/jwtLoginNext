@@ -2,6 +2,7 @@ import pool, { executeQuery } from "../../../config/db"
 import nc from "next-connect";
 const qs = require('qs')
 const moment = require('moment')
+const Joi = require('joi')
 const handler = nc();
 const axios = require('axios')
 handler.post(async(req , res) => {
@@ -11,7 +12,27 @@ handler.post(async(req , res) => {
     let statusCode 
     let msg = "fail"
 
+    let userChk = new Object();
+    userChk.name = name;
+    userChk.phone = phone;
+    userChk.sort = sort;
+    userChk.content = content
+
     try{
+        const schema = Joi.object({
+            name : Joi.string().pattern(new RegExp(/^[가-힣]{2,4}|[a-zA-Z]{2,12}/)).required(),
+            phone : Joi.string().min(1).max(12).pattern(new RegExp(/^[0-9]+$/)).required(),
+            sort : Joi.string().valid('join' , 'partner' , 'private').required(),
+            content : Joi.string().required(),
+        })
+
+        const value = await schema.validateAsync(userChk)
+
+        if(value.error){
+            console.error('validate 테스트 통과 실패')
+            //error catch 넘어감
+        } else{
+             console.log('validate 테스트 통과')
         let partnerSql = ""
 
         partnerSql += "insert into sample_partner(sp_name , sp_phone , sp_sort , sp_text) "
@@ -88,14 +109,13 @@ handler.post(async(req , res) => {
             msg = 'success' 
             res.send(msg)                   
         }  
-
-
         }
-        
+    }
 
     }catch(err){
         statusCode = 500;
-        throw err
+        msg = 'fail' 
+        res.send(msg)   
     }
 })
 

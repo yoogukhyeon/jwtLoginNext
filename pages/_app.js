@@ -21,8 +21,6 @@ function MyApp({ Component, pageProps }) {
           'Authorization' : `Bearer ${token}`
         }            
       }).then(res => {
-        //받아온 정보값 상태관리
-        console.log(res.data.data);
         setAuth(state => {
           return {
             ...state,
