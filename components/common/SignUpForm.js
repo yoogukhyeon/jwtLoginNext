@@ -81,8 +81,22 @@ export default function SignUpForm(){
              })
     }
 
-    console.log("12312321")
-    console.log(data)
+    const phoneChk = (phone , e) => {
+        e.preventDefault();
+        console.log('phone', phone)
+
+        axios({
+            method : "POST",
+            url: `${process.env.API_HOST}/api/common/phonechk`,
+            data : {
+                phone
+            }
+        }).then(res => {
+            console.log('res' , res)
+        }).catch(err => {
+            console.error(err)
+        })
+    }
 
     return(
         <div className="container">
@@ -240,7 +254,7 @@ export default function SignUpForm(){
                                                     name="emailValue" 
                                                     value={values.emailValue}
                                                     onChange={handleChange}
-                                                   
+                                            
                                                     />
                                         </span>  
                                             <div className="text-danger w-full">{errors.email && touched.email && errors.email}</div>  
@@ -300,7 +314,10 @@ export default function SignUpForm(){
                                             onBlur={handleBlur}  
                                             placeholder="-없이 숫자만 입력." />
                 
-                                            <button className="btn btn-info block border border-grey-light w-13 p-3 rounded mb-4 text-white font-bold" type="button">인증번호</button>
+                                            <button className="btn btn-info block border border-grey-light w-13 p-3 rounded mb-4 text-white font-bold" 
+                                                    type="button"
+                                                    onClick={(e) => {phoneChk(values.phone , e)}}        
+                                            >인증번호</button>
                                             
                                         
                                             </span>    
@@ -313,7 +330,7 @@ export default function SignUpForm(){
                                             className="block border border-grey-light w-13 p-3 rounded mb-4"
                                             name="phoneChk"
                                             placeholder="인증번호" />
-                                            
+                                             <input type="hidden" name="phoneChk" value="N" />
                                             <button className="btn btn-info block border border-grey-light w-13 p-3 rounded mb-4 text-white font-bold" type="button">인증확인</button>
                                             </span>       
                                     </div>

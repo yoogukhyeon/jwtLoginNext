@@ -17,8 +17,8 @@ handler.post(async(req , res) => {
     try{
         let emailChkSql = "";
         emailChkSql += "select mem_email from cid_n_member where mem_email = ? limit 1"
-        const emailChkDate = await executeQuery(emailChkSql , [email]);
-        const emailChk = emailChkDate[0]?.mem_email
+        const emailChkData = await executeQuery(emailChkSql , [email]);
+        const emailChk = emailChkData[0]?.mem_email
 
         
        if(emailChk){
