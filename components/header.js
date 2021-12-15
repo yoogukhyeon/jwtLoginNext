@@ -33,6 +33,9 @@ export default function Header({children}){
                         <Link href="/partner">
                             <a className="btn btn-link mr-2">입사 & 문의</a>
                         </Link>
+                        <Link href="/common/signup">
+                            <a className="btn btn-link mr-2">common 회원가입</a>
+                        </Link>
                         <Link href="/articles">
                                 <a className="btn btn-link mr-2">게시판</a>
                         </Link>

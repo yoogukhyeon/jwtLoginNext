@@ -1,7 +1,9 @@
 import moment from "moment"
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {Formik,Field} from "formik"
 import $ from 'jquery';
+import axios from "axios";
+import { useRouter } from "next/router";
 
 const emailRegExp = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
 const passRegExp =  /^.*(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&*()_+={}]).*$/;
@@ -20,7 +22,8 @@ var ddHtml = '';
 
 
 export default function SignUpForm(){
-
+    const router = useRouter()
+    const [data , setDate] = useState('');
     useEffect(() => {
         for(let i = 1900; yyyy >= i; i++){
             yyyyHtml += '<option value="' + i + '">' + i + '</option>';
@@ -44,11 +47,42 @@ export default function SignUpForm(){
         y.innerHTML = yyyyHtml
         m.innerHTML = mmHtml
         d.innerHTML = ddHtml
-       
-     
-       
     }, [])
 
+
+    const emailChk = (email , emailValue  , e) => {
+        e.preventDefault();
+      
+        console.log('emailValue' , emailValue)
+        axios({
+            method:"POST",
+            url: `${process.env.API_HOST}/api/common/emailchk`,
+            data:{
+                email
+            }
+            })
+             .then(res => {
+                 let text = ""
+                 if(res.data.msg === "success"){
+                     text = "사용 가능한 이메일 입니다."
+                     const eee = emailValue = "Y"
+                     setDate(eee)
+                    
+                 }
+                 if(res.data.msg === "fail"){
+                    text = "이미 가입된 이메일입니다."
+                    const sss = emailValue = "N"
+                    setDate(sss)
+               
+                 }
+                 $('.email-text-error').text(text)
+             }).catch(err => {
+                 console.log(err)
+             })
+    }
+
+    console.log("12312321")
+    console.log(data)
 
     return(
         <div className="container">
@@ -62,6 +96,7 @@ export default function SignUpForm(){
                     <Formik
                         initialValues={{
                             email : "",
+                            emailValue : "",
                             password :  "",
                             passwordChk : "",
                             name : "",
@@ -74,6 +109,7 @@ export default function SignUpForm(){
                             agree1 : "N",
                             agree2 : "N"
                         }}
+
                         validate = {values => {
                              const errors = {}
                              if(!values.email){
@@ -83,6 +119,8 @@ export default function SignUpForm(){
                              }else if(spaceRegExp.test(values.email)){
                                  errors.email = "이메일에 공백이 포함되어 있습니다."
                              }
+                         
+
                             if(!values.password){
                                  errors.password = "비밀번호를 입력해주세요."
                              }else if(!passRegExp.test(values.password)){
@@ -104,7 +142,11 @@ export default function SignUpForm(){
                              }
                              if(!values.phone){
                                  errors.phone = "휴대폰번호 인증을 받아야합니다."
+                             }else if(values.phone.length > 12){
+                                 errors.phone = "정확한 휴대폰번호를 입력해주세요."
                              }
+
+                           
                             
                             const agreeAll = document.getElementById('agreeAll')
                             const agree1 = document.getElementById('agree1')
@@ -147,12 +189,22 @@ export default function SignUpForm(){
                                 alert('개인정보 처리방침에 동의해주세요.')
                                 return false
                             }
-                          
-                            
+
+                            if(data === 'N'){
+                                alert('이메일 중복체크를 해주세요.')
+                                return false
+                            }
+
                          
-                        
                             console.log('values' , values)
-                          
+                            
+                            axios.post(`${process.env.API_HOST}/api/common/signup` , values)
+                                 .then(res => {
+                                     console.log("res :::::::" , res);
+                                     router.push('/')
+                                 }).catch(err => {
+                                     console.error(err)
+                                 })
                         }}
                     >
                         {({
@@ -176,10 +228,23 @@ export default function SignUpForm(){
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                             placeholder="이메일" />
-                                            <button className="btn btn-info block border border-grey-light w-13 p-3 rounded mb-4 text-white font-bold" type="button">중복확인</button>                                          
-                                            <input type="hidden" name="emailChk" value="" />
+                                            <button className="btn btn-info block border border-grey-light w-13 p-3 rounded mb-4 text-white font-bold" 
+                                                    type="button"
+                                                    onClick={(e) => {emailChk(values.email , values.emailValue   , e)}}
+                                                    >중복확인</button>                                          
+                                           
+
+                                            <Field   
+                                                    type="hidden" 
+                                                    id="emailValue"
+                                                    name="emailValue" 
+                                                    value={values.emailValue}
+                                                    onChange={handleChange}
+                                                   
+                                                    />
                                         </span>  
                                             <div className="text-danger w-full">{errors.email && touched.email && errors.email}</div>  
+                                            <div className="email-text-error text-info w-full"></div> 
                                     </div>
                 
                                     <div className="input-group mb-0 ">
@@ -193,7 +258,8 @@ export default function SignUpForm(){
                                             onBlur={handleBlur}
                                             placeholder="password" />    
 
-                                            <div className="text-danger w-full">{errors.password && touched.password && errors.password}</div>     
+                                            <div className="text-danger w-full">{errors.password && touched.password && errors.password}</div>  
+                                            
                                     </div>
                 
                                     <div className="input-group mb-0 ">
