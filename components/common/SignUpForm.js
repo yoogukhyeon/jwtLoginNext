@@ -1,6 +1,13 @@
 import moment from "moment"
 import { useEffect } from "react";
 import {Formik,Field} from "formik"
+import $ from 'jquery';
+
+const emailRegExp = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
+const passRegExp =  /^.*(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&*()_+={}]).*$/;
+const spaceRegExp =  /\s/g;
+const nameRegExp =  /[`~!=.,@#$%^&*|\\\'\";:\/?]/gi
+const nameNumberRegExp = /[0-9]+/g
 let yyyy = moment().format('YYYY');
 var yyyyHtml = '';
 var mmHtml = '';
@@ -37,6 +44,9 @@ export default function SignUpForm(){
         y.innerHTML = yyyyHtml
         m.innerHTML = mmHtml
         d.innerHTML = ddHtml
+       
+     
+       
     }, [])
 
 
@@ -55,24 +65,94 @@ export default function SignUpForm(){
                             password :  "",
                             passwordChk : "",
                             name : "",
-                            email : "",
+                            phone : "",
                             gender : "",
-                            yyyy :"1985",
-                            mm : "1",
-                            dd : "1",
-                            agreeAll : "",
-                            agree1 : "",
-                            agree2 : ""
+                            yyyy : "1985",
+                            mm : "",
+                            dd : "",
+                            agreeAll : "N",
+                            agree1 : "N",
+                            agree2 : "N"
                         }}
                         validate = {values => {
-                         
+                             const errors = {}
+                             if(!values.email){
+                                 errors.email = "이메일을 입력해주세요."
+                             }else if(!emailRegExp.test(values.email)){
+                                 errors.email = "유효하지 않은 이메일주소입니다."
+                             }else if(spaceRegExp.test(values.email)){
+                                 errors.email = "이메일에 공백이 포함되어 있습니다."
+                             }
+                            if(!values.password){
+                                 errors.password = "비밀번호를 입력해주세요."
+                             }else if(!passRegExp.test(values.password)){
+                                 errors.password = "비밀번호는 영문자, 숫자, 특수문자 조합을 입력해야 합니다."
+                             }else if(values.password.length < 9){
+                                 errors.password = "비밀번호는 8자 이상 입력해주세요."
+                             }
+                            if(values.password != values.passwordChk){
+                                 errors.passwordChk = "비밀번호를 다시 확인하세요."
+                             }
+                            if(!values.name){
+                                 errors.name = "이름을 입력해주세요."
+                             }else if(spaceRegExp.test(values.name)){
+                                 errors.name = "이름에 공백이 포함되어 있습니다."
+                             }else if(nameRegExp.test(values.name)){
+                                 errors.name = "특수문자를 사용하실수 없습니다."
+                             }else if(nameNumberRegExp.test(values.name)){
+                                 errors.name = "숫자를 사용할수 없습니다."
+                             }
+                             if(!values.phone){
+                                 errors.phone = "휴대폰번호 인증을 받아야합니다."
+                             }
+                            
+                            const agreeAll = document.getElementById('agreeAll')
+                            const agree1 = document.getElementById('agree1')
+                            const agree2 = document.getElementById('agree2')
+                            
+                            agreeAll.addEventListener("click" , () => {
+                                if($(agreeAll).prop('checked' , true)){
+                                    $(agree1).prop("checked" , true)
+                                    $(agree2).prop("checked" , true)
+                                    values.agreeAll = "Y"
+                                    values.agree1 = "Y"
+                                    values.agree2 = "Y"
+                                   
+                                    
+                                }else{
+                                    $(agree1).prop("checked" , false)
+                                    $(agree2).prop("checked" , false)
+                                    values.agreeAll = "N"
+                                    values.agree1 = "N"
+                                    values.agree2 = "N"
+                                }
+                            })
+                            return errors;
+                          
                         }}
                         onSubmit = {values => {
-                            if(!values.gender){
+                        	if(!values.gender){
                                 alert('성별을 선택해주세요.')
                                 return false
                             }
+                            if(!values.mm || !values.dd){
+                                alert('생년월일을 선택해주세요.')
+                                return false
+                            }
+                            if(values.agree1 === "N" || values.agree1.length === 0 ){
+                                alert('이용약관에 동의해주세요.')
+                                return false
+                            }
+                            if(values.agree2 === "N" || values.agree2.length === 0){
+                                alert('개인정보 처리방침에 동의해주세요.')
+                                return false
+                            }
+                          
+                            
+                         
+                        
                             console.log('values' , values)
+                          
                         }}
                     >
                         {({
@@ -96,11 +176,10 @@ export default function SignUpForm(){
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                             placeholder="이메일" />
-                
-                                                <button className="btn btn-info block border border-grey-light w-13 p-3 rounded mb-4 text-white font-bold" type="button">중복확인</button>
-                                            
-                                                <input type="hidden" name="emailChk" value="" />
-                                            </span>         
+                                            <button className="btn btn-info block border border-grey-light w-13 p-3 rounded mb-4 text-white font-bold" type="button">중복확인</button>                                          
+                                            <input type="hidden" name="emailChk" value="" />
+                                        </span>  
+                                            <div className="text-danger w-full">{errors.email && touched.email && errors.email}</div>  
                                     </div>
                 
                                     <div className="input-group mb-0 ">
@@ -112,9 +191,10 @@ export default function SignUpForm(){
                                             value={values.password}
                                             onChange={handleChange}
                                             onBlur={handleBlur}
-                                            placeholder="password" />       
+                                            placeholder="password" />    
+
+                                            <div className="text-danger w-full">{errors.password && touched.password && errors.password}</div>     
                                     </div>
-                
                 
                                     <div className="input-group mb-0 ">
                                         <label htmlFor="passwordChk" className="text-sm py-2">비밀번호확인*</label>
@@ -125,9 +205,9 @@ export default function SignUpForm(){
                                             value={values.passwordChk}
                                             onChange={handleChange}
                                             onBlur={handleBlur}
-                                            placeholder="passwordChk" />       
+                                            placeholder="passwordChk" />   
+                                            <div className="text-danger w-full">{errors.passwordChk && touched.passwordChk && errors.passwordChk}</div>      
                                     </div>
-                           
                                     <div className="input-group mb-0 ">
                                         <label htmlFor="name" className="text-sm py-2">이름*</label>
                                         <input 
@@ -137,10 +217,9 @@ export default function SignUpForm(){
                                             value={values.name}
                                             onChange={handleChange}
                                             onBlur={handleBlur}
-                                            placeholder="passwordChk" />  
-                                                
+                                            placeholder="이름을 입력해주세요." />  
+                                        <div className="text-danger w-full">{errors.name && touched.name && errors.name}</div>     
                                     </div>
-                                     
                                     <div className="input-group mb-0 ">
                                         <label htmlFor="phone" className="text-sm py-2">핸드폰번호*</label>
                                         <span className="input-group-prepend flex flex-row">
@@ -148,6 +227,7 @@ export default function SignUpForm(){
                                             <input 
                                             type="text"
                                             className="block border border-grey-light w-13 p-3 rounded mb-4"
+                                            id="phone"
                                             name="phone"
                                             value={values.phone}
                                             onChange={handleChange}
@@ -156,9 +236,9 @@ export default function SignUpForm(){
                 
                                             <button className="btn btn-info block border border-grey-light w-13 p-3 rounded mb-4 text-white font-bold" type="button">인증번호</button>
                                             
-                                    
+                                        
                                             </span>    
-                
+                                            <div className="text-danger w-full">{errors.phone && touched.phone && errors.phone}</div> 
                 
                                             <span className="input-group-prepend flex flex-row">
                                            
@@ -180,25 +260,16 @@ export default function SignUpForm(){
                                             <span className="input-group-prepend  ">
                                                 <div className="btn bg-slate-600 block border border-grey-light w-13 p-3 rounded mb-4 text-white font-bold" data-toggle="buttons">
                                                     <label className="btn gen-btn">
-                                                       {/*  <input type="radio" name="gender" 
-                                                            value={values.gender} 
-                                                           onChange={handleChange}
-                                                           onBlur={handleBlur}
-                                                        /> 남 */}
                                                             남
                                                         <Field type="radio" name="gender" value="M" />
                                                     </label>
                                                     <label className="btn gen-btn">
-                                                       {/*  <input type="radio" name="gender" 
-                                                                value="W"     
-                                                               onChange={handleChange}
-                                                               onBlur={handleBlur}            
-                                                        />  */}
                                                         여
                                                         <Field type="radio" name="gender" value="W" />
                                                     </label>
                                                 </div>  
                                              </span>   
+                                             
                                     </div>
                 
                                     
@@ -268,50 +339,45 @@ export default function SignUpForm(){
                                 </div>
                             </div>
                             </div>
-                
+                                                        
+
+                       
+
                                     <div className="flex justify-center mt-3 mb-5">
-                                        <div>
+                                        <div className="w-full ">
                                             <div className="form-check">
-                                            <input className="form-check-input appearance-none h-4 w-4 border border-black-300 rounded-sm  checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" 
-                                                   type="checkbox" 
-                                                   value="y" 
-                                                   id="agreeAll" 
-                                                   name="agreeAll"
-                                                   value={values.agreeAll}
-                                                   onChange={handleChange}
-                                                   onBlur={handleBlur}  
-                                                   />
-                                            <label className="form-check-label inline-block text-gray-800" htmlFor="agreeAll">
-                                                전체 동의
+                                            <label className="form-check-label inline-block w-98 text-gray-800">
+                                                  
+                                                    전체 동의
+                                              <Field className="form-check-input appearance-none h-4 w-4 border border-black-300 rounded-sm  checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" 
+                                                    type="checkbox" 
+                                                    id="agreeAll"
+                                                    name="agreeAll" 
+                                                    value="Y" 
+                                                    />
                                             </label>
                                             </div>
                                             <div className="form-check">
-                                            <input className="form-check-input appearance-none h-4 w-4 border border-black-300 rounded-sm  checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" 
-                                                   type="checkbox" 
-                                                   value="y" 
-                                                   name="agree1" 
-                                                   id="agree1"
-                                                   value={values.agree1}
-                                                   onChange={handleChange}
-                                                   onBlur={handleBlur} 
-                                                   />
-                                            <label className="form-check-label inline-block text--800" htmlFor="agree1">
+                                            <label className="form-check-label inline-block w-98 text-gray-800">
                                                 이용약관(필수)
+                                            <Field className="form-check-input appearance-none h-4 w-4 border border-black-300 rounded-sm  checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" 
+                                                  type="checkbox" 
+                                                  name="agree1" 
+                                                  id="agree1"
+                                                  value="Y"
+                                                  />
                                             </label>
                                             </div>
                                             <div className="form-check">
-                                            <input className="form-check-input appearance-none h-4 w-4 border border-black-300 rounded-sm  checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" 
-                                                   type="checkbox" 
-                                                   value="y" 
-                                                   name="agree2" 
-                                                   id="agree2"
-                                                   value={values.agree2}
-                                                   onChange={handleChange}
-                                                   onBlur={handleBlur} 
-                                                   />
-                                            <label className="form-check-label inline-block text--800" htmlFor="agree2">
+                                            <label className="form-check-label inline-block w-98 text-gray-800">
                                                 개인정보 처리방침(필수)
-                                            </label>
+                                              <Field className="form-check-input appearance-none h-4 w-4 border border-black-300 rounded-sm  checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" 
+                                                    type="checkbox" 
+                                                    name="agree2"
+                                                    id="agree2" 
+                                                    value="Y"
+                                                    />
+                                              </label>
                                             </div>
                                         </div>
                                     </div>
