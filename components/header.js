@@ -19,8 +19,6 @@ export default function Header({children}){
         router.push('/')
     }, [])
 
-   console.log(auth)
-
     return(<div className="container flex flex-col">
                 <header className="flex flex-row justify-between py-2">
                     <Link href="/">
@@ -35,6 +33,9 @@ export default function Header({children}){
                         </Link>
                         <Link href="/common/signup">
                             <a className="btn btn-link mr-2">common 회원가입</a>
+                        </Link>
+                        <Link href="/sample/signup">
+                            <a className="btn btn-link mr-2">sample 회원가입</a>
                         </Link>
                         <Link href="/articles">
                                 <a className="btn btn-link mr-2">게시판</a>

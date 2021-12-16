@@ -16,11 +16,6 @@ var mmHtml = '';
 var ddHtml = '';
 
 
-
-
-
-
-
 export default function SignUpForm(){
     const router = useRouter()
     const [data , setDate] = useState('');

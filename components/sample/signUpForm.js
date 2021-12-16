@@ -26,8 +26,26 @@ export default function SignUpForm(){
         agree1 : "N",
         agree2 : "N"
     });
-    
+    const [emailChk , setEmailChk] = useState({
+        emailChk : "",
+    })
     const [errors , setErrors] = useState({});
+    const [authCode , setAuthCode] = useState("")
+    const [phoneAuth , setPhoneAuth] = useState({
+        phoneAuthNumber : ""
+    })
+    const [phoneValue , setPhoneValue] = useState({
+        phoneValue : ""
+    })
+    //phoneAuthNumber 
+    const onAuthChange = (e) => {
+        const {name , value} = e.target;
+        const nextInputs = {
+            ...phoneAuth,
+            [name] : value
+        }
+        setPhoneAuth(nextInputs)
+    }
 
     //input value 
     const onChange = (e) => {
@@ -69,7 +87,23 @@ export default function SignUpForm(){
         }
     }
 
+    const onEmailChk = (e) => {
+        const {name , value} = e.target;
+        const nextInputs = {
+            ...emailChk,
+            [name] : value
+        }
+        setEmailChk(nextInputs)
+    }
 
+    const onphoneChk = (e) => {
+        const {name , value} = e.target;
+        const nextInputs = {
+            ...phoneChk,
+            [name] : value
+        }
+        setPhoneValue(nextInputs)
+    }
       /* remove char '-' */
 	function removeChar(event) {
 		event = event || window.event;
@@ -152,6 +186,11 @@ export default function SignUpForm(){
             return false
         }
 
+        if(!inputs.phone){
+            alert("핸드폰번호을 입력해주세요.")
+            return false
+        }
+
         if(!inputs.gender){
             alert("성별을 선택해주세요.")
             return false
@@ -166,17 +205,97 @@ export default function SignUpForm(){
             return false
         }
 
-        console.log("inputs" , inputs)
-        
+        if(!emailChk){
+            alert('이메일 중복체크를 해주세요.')
+            return false
+        }
+
+        if(emailChk == "N"){
+            alert('중복된 이메일입니다 중복체크를 해주세요.')
+            return false
+        }
+
+        if(phoneValue == "N"){
+            alert('휴대폰 인증을 해주세요.')
+            return false
+        }
+
        axios.post(`${process.env.API_HOST}/api/common/signup` , inputs)
             .then(res => {
                 if(res.data.msg === "success"){  
-                    router.push('/')
+                    router.push('/auth/sign-in')
                 }
             }).catch(err => {
                 console.error(err)
             })
     };
+
+    const emailDataChk = (email , value , e) => {
+        e.preventDefault();
+
+        axios({
+            method : "POST",
+            url: `${process.env.API_HOST}/api/common/emailchk`,
+            data:{
+                email
+            }
+        }).then(res => {
+            let text = ""
+            if(res.data.msg === "success"){
+                 value = "Y"
+                setEmailChk(value)
+            }
+            if(res.data.msg === "fail"){
+               value = "N"
+               setEmailChk(value)
+            }
+            setErrors(validateForm(inputs , value))
+        }).catch(err => {
+            console.error(err)
+        })
+
+    }
+
+
+   
+    const phoneChk = (phone , e) => {
+        e.preventDefault();
+        console.log(phone)
+
+        axios({
+            method : "POST",
+            url : `${process.env.API_HOST}/api/common/phonechk`,
+            data : {
+                phone
+            }
+        }).then(res => {
+            console.log('res' , res)
+            if(res.data.msg === "success"){
+                const code = res.data.code
+                setAuthCode(code)
+            }
+            if(res.data.msg === "fail"){
+                if(confirm("이미 가입한 번호입니다. 아이디 찾기 페이지로 이동하시겠습니까?")){
+                    router.push('/')
+                }
+            }
+        }).catch(err => {
+            console.error(err)
+        })
+    }
+
+    const phoneDataChk = (auth , phoneValue , e) => {
+        e.preventDefault();
+        if(authCode == auth){
+            phoneValue = 'Y';
+            setPhoneValue(phoneValue)
+            alert('인증을 완료하셨습니다.')
+        }else{
+            phoneValue = 'N';
+            setPhoneValue(phoneValue)
+            alert('인증을 실패하셨습니다.')
+        }
+    }
 
     return(
         <div className={styles.container}>
@@ -186,10 +305,18 @@ export default function SignUpForm(){
                 <label htmlFor="email" className={styles.label}>이메일*</label>
                 <div className={styles.formWrap}>
                     <input type="email" name="email" id="email" className={styles.input} placeholder="이메일을 입력해주세요." onChange={onChange} onKeyUp={validateKeyUp} />
-                    <button className={styles.btn}>중복체크</button>
+                    <button type="button" 
+                            className={styles.btn}
+                            onClick={(e) => {emailDataChk(inputs.email, emailChk.emailChk  , e)}}
+                    >중복체크</button>
+                    <input type="hidden" name="emailChk" value="Y" onChange={onEmailChk} />
+                                                   
                 </div>
-                {errors.email &&  <div className={styles.error}>{errors.email}</div>}
-               
+                {errors.email && <div className={styles.error}>{errors.email}</div>
+                 && emailChk == "Y" ? (<div className={styles.infor}>{errors.email}</div>) : (
+                    (<div className={styles.error}>{errors.email}</div>)
+                 )
+                }
             </div>
             <div className={styles.mb}>
                 <label htmlFor="password" className={styles.label}>비밀번호*</label>
@@ -215,16 +342,18 @@ export default function SignUpForm(){
             <div className={styles.mb}>
                 <label htmlFor="phone" className={styles.label}>핸드폰번호*</label>
                 <div className={styles.formWrap}>
-                    <input type="text" name="phone" id="phone" className={styles.input} placeholder="핸드폰번호를 입력해주세요." onChange={onChange}  onKeyPress={removeChar} onKeyUp={validateKeyUp}  />
-                    <button className={styles.btn}>인증번호</button>
+                    <input type="text" name="phone" id="phone" className={styles.input} placeholder="핸드폰번호를 입력해주세요." onChange={onChange}  onKeyPress={removeChar} onKeyUp={validateKeyUp} maxLength="11"  />
+                    <button type="button"  className={styles.btn} onClick={(e) => {phoneChk(inputs.phone , e)}}  >인증번호</button>
                 </div>
                 {errors.phone &&  <div className={styles.error}>{errors.phone}</div>}
             </div>
             <div className={styles.mb}>
                 <div className={styles.formWrap}>
-                    <input type="text" name="phone" id="phone" className={styles.input} onChange={onChange} />
-                    <button className={styles.btn}>인증확인</button>
+                    <input type="text" name="phoneAuthNumber" className={styles.input} onChange={onAuthChange} onKeyPress={removeChar} maxLength="12" />
+                    <input type="hidden" name="phoneValue" value="Y" onChange={onphoneChk} />
+                    <button type="button" className={styles.btn} onClick={(e) => {phoneDataChk(phoneAuth.phoneAuthNumber , phoneChk.phoneChk , e )}}>인증확인</button>
                 </div>
+            
             </div>
             <div className={styles.mb}>
                 <label htmlFor="gender" className={styles.label}>성별*</label>

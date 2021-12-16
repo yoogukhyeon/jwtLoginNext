@@ -44,8 +44,6 @@ export const getServerSideProps = async ({req , res , resolvedUrl}) => {
                 destination : '/auth/sign-in?ref=' + resolvedUrl,
                 permanent : false
             }
-           
-
         }
     }
 

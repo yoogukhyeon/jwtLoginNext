@@ -6,10 +6,9 @@ const spaceRegExp =  /\s/g;
 const nameRegExp =  /[`~!=.,@#$%^&*|\\\'\";:\/?]/gi
 const nameNumberRegExp = /[0-9]+/g
 
-const validateForm = (values) => {
-    console.log(values)
-    let errors = {}
+const validateForm = (values , email ) => {
 
+    let errors = {}
     if(!values.email){
         errors.email = "이메일을 입력해주세요."
     }else if(!emailRegExp.test(values.email)){
@@ -41,14 +40,19 @@ const validateForm = (values) => {
     }
 
     if(!values.phone){
-        errors.phone = "휴대폰번호 인증을 받아야합니다."
+        errors.phone = "휴대폰번호를 입력해주세요."
     }else if(values.phone.length > 12){
         errors.phone = "정확한 휴대폰번호를 입력해주세요."
     }
 
- 
+    if(email === "N"){
+        errors.email = "이미 가입된 이메일입니다."
+    }
+    if(email === "Y"){
+        errors.email = "사용 가능한 이메일 입니다."
+    }
 
-    return errors
+    return errors 
 };
 
 export default validateForm
