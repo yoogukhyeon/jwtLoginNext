@@ -232,7 +232,10 @@ export default function SignUpForm(){
 
     const emailDataChk = (email , value , e) => {
         e.preventDefault();
-
+        if(!email){
+            alert("이메일을 입력해주세요.")
+            return false
+        }
         axios({
             method : "POST",
             url: `/api/user/emailchk`,
