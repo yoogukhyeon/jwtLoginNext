@@ -14,6 +14,7 @@ handler.post(async(req , res) => {
  
     const {phone} = req.body
 
+    console.log(phone)
     try{
         let phoneChksql = "";
         phoneChksql += "select mem_phone from cid_n_member where mem_phone = ? limit 1"
@@ -71,7 +72,6 @@ handler.post(async(req , res) => {
             msg = sendResult.message
         }else {
             result = {
-                code : code,
                 statusCode : 200,
                 msg : 'success'
             }

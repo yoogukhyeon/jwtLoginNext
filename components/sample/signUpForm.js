@@ -220,7 +220,7 @@ export default function SignUpForm(){
             return false
         }
 
-       axios.post(`${process.env.API_HOST}/api/common/signup` , inputs)
+       axios.post(`/api/user/signup` , inputs)
             .then(res => {
                 if(res.data.msg === "success"){  
                     router.push('/auth/sign-in')
@@ -235,7 +235,7 @@ export default function SignUpForm(){
 
         axios({
             method : "POST",
-            url: `${process.env.API_HOST}/api/common/emailchk`,
+            url: `/api/user/emailchk`,
             data:{
                 email
             }
@@ -261,10 +261,14 @@ export default function SignUpForm(){
     const phoneChk = (phone , e) => {
         e.preventDefault();
         console.log(phone)
-
+        if(!phone){
+            alert("핸드폰 번호를 입력해주세요.")
+            return false
+        }
+        
         axios({
             method : "POST",
-            url : `${process.env.API_HOST}/api/common/phonechk`,
+            url : `/api/user/phonechk`,
             data : {
                 phone
             }
@@ -284,6 +288,7 @@ export default function SignUpForm(){
         })
     }
 
+    
     const phoneDataChk = (auth , phoneValue , e) => {
         e.preventDefault();
         if(authCode == auth){
