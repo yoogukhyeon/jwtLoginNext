@@ -1,3 +1,4 @@
+
 import pool, { executeQuery } from "../../config/db"
 import nc from "next-connect";
 const handler = nc();
@@ -15,6 +16,7 @@ handler.get( async (req , res) => {
         //받아온 토큰값 
         const authToken = req.headers.authorization;
        
+        console.log("authToken" , authToken)
         // 첫번쨰 방식
         /* if(authToken){
             const token = authToken.split('Bearer ')[1];
@@ -40,12 +42,11 @@ handler.get( async (req , res) => {
                     const email = decoded.email;
 
                     let tokenSql = ""
-                    tokenSql += "select no , name , email , "
+                    tokenSql += "select mem_no , mem_name , mem_email , "
                     tokenSql += "date_format(reg_date , '%Y-%m-%d') as regDate "
-                    tokenSql += "from sample_sign_up where email = ? and token = ? limit 1"
+                    tokenSql += "from cid_n_member where mem_email = ? and mem_token = ? limit 1"
             
                     let siupUpData = await executeQuery(tokenSql , [email , token]);
-                    console.log(siupUpData)
                     siupUpData = siupUpData[0]
                     result = {
                         data : siupUpData,

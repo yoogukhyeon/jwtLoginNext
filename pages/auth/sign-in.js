@@ -63,7 +63,7 @@ export default function SignIn(){
                                         router.push(router.query.ref ?? '/')
                                     }
                                     if(res.data.msg === "fail"){
-                                        alert('로그인 실패')
+                                        alert('회원정보가 없습니다.')
                                         router.reload()
                                     }
                                  }).catch(err => {

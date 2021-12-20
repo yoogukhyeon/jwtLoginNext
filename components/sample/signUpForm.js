@@ -263,7 +263,6 @@ export default function SignUpForm(){
    
     const phoneChk = (phone , e) => {
         e.preventDefault();
-        console.log(phone)
         if(!phone){
             alert("핸드폰 번호를 입력해주세요.")
             return false
@@ -276,12 +275,11 @@ export default function SignUpForm(){
                 phone
             }
         }).then(res => {
-            console.log('res' , res)
             if(res.data.msg === "success"){
                 const code = res.data.code
                 setAuthCode(code)
             }
-            if(res.data.msg === "fail"){
+            if(res.data.msg === "fail" || res.data.msg === "already"){
                 if(confirm("이미 가입한 번호입니다. 아이디 찾기 페이지로 이동하시겠습니까?")){
                     router.push('/')
                 }

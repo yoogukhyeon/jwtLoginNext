@@ -14,11 +14,14 @@ handler.post( async (req , res) => {
     console.log(email , password)
     try{
         let signIn = "";
-        signIn = "select * from sample_sign_up where email = ?"
+        signIn = "select * from cid_n_member where mem_email = ?"
         const signInData = await executeQuery(signIn , [email])
-        const no = signInData[0].no;
-      
-        if(!signInData[0].email || !bcrypt.compareSync(password , signInData[0].password)){
+        const no = signInData[0].mem_no;
+        
+        console.log("signdata" , signInData)
+        console.log("email" , signInData[0].mem_email)
+
+        if(!signInData[0].mem_email || !bcrypt.compareSync(password , signInData[0].mem_pwd)){
             console.log('아이디/비밀번호가 일치하지 않습니다');
             msg = "fail";
         }else{
@@ -27,10 +30,10 @@ handler.post( async (req , res) => {
 
             //로그인 성공시 토큰 생성
             let token = jwt.sign({email : email} , jwtSecretKey , {expiresIn : '10d'})
-       
+            console.log('123123' , token)
             //토큰 생성후 데이터 베이스 저장
             let signToken = "";
-            signToken = "update sample_sign_up set token = ? where email = ? and no = ?"
+            signToken = "update cid_n_member set mem_token = ? where mem_email = ? and mem_no = ?"
             const signTokenData = await executeQuery(signToken , [token , email , no])
             console.log('token 데이터 삽입 성공')
 
