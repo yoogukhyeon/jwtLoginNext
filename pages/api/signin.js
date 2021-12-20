@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const jwtSecretKey = process.env.JWT_SECRET_KEY;
 
+
 handler.post( async (req , res) => {
     let result = {}
     let statusCode 
