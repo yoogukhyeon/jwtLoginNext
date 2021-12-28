@@ -13,6 +13,7 @@ function MyApp({ Component, pageProps }) {
   //받아온 토큰값 Bearer 토큰값으로 서버에 보내주기
   const cookies = new Cookies();
   const token = cookies.get('cdt');
+ 
   useEffect( ()=> {
     if(token){
       axios(process.env.API_HOST + '/api/auth', {

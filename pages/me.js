@@ -4,7 +4,7 @@ import authAtom from "../stores/authAtom"
 import Cookies from 'universal-cookie';
 export default function Me(){
     const [auth , setAuth] = useAtom(authAtom);
-
+    console.log("auth" , auth)
     return(
         <Header>
             {auth.user ? (
@@ -12,9 +12,9 @@ export default function Me(){
             <div>
                 <dl>
                    <dt>이메일</dt>
-                   <dd>{auth.user?.email}</dd>
+                   <dd>{auth.user?.mem_email}</dd>
                    <dt>이름</dt>
-                   <dd>{auth.user?.name}</dd>
+                   <dd>{auth.user?.mem_name}</dd>
                    <dt>가입일자</dt>
                    <dd>{auth.user?.regDate}</dd>
                 </dl>

@@ -40,12 +40,14 @@ export default function SignIn(){
                         }}
                         onSubmit={(values , {setSubmitting}) => {
                             console.log(values)
-                            axios.post(`${process.env.API_HOST}/api/signin` , values)
+                            axios.post(`/api/user/signin` , values)
                                  .then(res => {
+                           
+                                   
                                     if(res.data.msg === "success"){
                                         alert('로그인 성공')
                                         //받아온 토큰값 쿠키 값으로
-                                 
+                                        
                                         const token = res.data.data.token;
                                         const cookies = new Cookies();
                                         cookies.set('cdt', token, {path: '/'})

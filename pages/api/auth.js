@@ -14,6 +14,8 @@ handler.get( async (req , res) => {
     
     try{
         //받아온 토큰값 
+        console.log("123123" , req.headers.authorization)
+
         const authToken = req.headers.authorization;
        
         console.log("authToken" , authToken)
