@@ -28,6 +28,9 @@ export default function Header({children}){
                         <Link href="/">
                             <a className="btn btn-link mr-2">홈</a>
                         </Link>
+                        <Link href="/pagination">
+                                <a className="btn btn-link mr-2">페이징 API</a>
+                        </Link>
                         <Link href="/partner">
                             <a className="btn btn-link mr-2">입사 & 문의</a>
                         </Link>

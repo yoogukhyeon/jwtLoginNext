@@ -1,7 +1,7 @@
 const {createPool} = require('mysql')
 
 const pool = createPool({
-    host : "copy1103.cjvgnltk0cex.ap-northeast-1.rds.amazonaws.com",
+    host : "copy1220.cjvgnltk0cex.ap-northeast-1.rds.amazonaws.com",
     user : "frank",
     password : "ss1gyk4w",
     dialect : "mysql",

@@ -11,10 +11,10 @@ handler.get(async (req , res) => {
 
     try{
          let articleSql = "";
-         articleSql += "select no , mem_no , title , content, (select name from sample_sign_up as ssu where ssu.no = sa.mem_no ) as name , date_format(reg_date , '%Y-%m-%d') as regDate from sample_article sa order by regDate DESC";
+         articleSql += "select no , mem_no , title , content, (select name from sample_sign_up as ssu where ssu.no = sa.mem_no ) as name , date_format(reg_date , '%Y-%m-%d') as regDate from sample_article sa order by reg_date DESC";
 
          let articleData = await executeQuery(articleSql , []);
-
+        
          result = {
              data : articleData,
              msg : "success"
