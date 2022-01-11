@@ -40,7 +40,7 @@ export default function SignIn(){
                         }}
                         onSubmit={(values , {setSubmitting}) => {
                             console.log(values)
-                            axios.post(`/api/user/signin` , values)
+                            axios.post(`${process.env.API_HOST}/api/signin` , values)
                                  .then(res => {
                            
                                    

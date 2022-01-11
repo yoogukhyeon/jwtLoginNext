@@ -16,7 +16,7 @@ function MyApp({ Component, pageProps }) {
  
   useEffect( ()=> {
     if(token){
-      axios(process.env.API_HOST + '/api/auth', {
+      axios(`http://localhost:4000/api/auth`, {
         'method' : 'get',
         'headers' : {
           'Authorization' : `Bearer ${token}`

@@ -5,6 +5,7 @@ const handler = nc();
 
 handler.get( async(req , res) => {
     const id = req.query.id;
+    console.log("id" , id)
     let result = {}
     let statusCode 
     let msg = "fail"
@@ -15,10 +16,10 @@ handler.get( async(req , res) => {
     try{
 
         let articleSql = "";
-        articleSql += "select no , mem_no , title , content, (select name from sample_sign_up as ssu where ssu.no = sa.mem_no ) as name , date_format(reg_date , '%Y-%m-%d') as regDate from sample_article sa where no = ?";
+        articleSql += "select no , mem_no , title , content, date_format(reg_date , '%Y-%m-%d') as regDate from sample_article sa where no = ?";
         
         let articleData = await executeQuery(articleSql , [id])
-        
+        console.log("articleData" , articleData)
         result ={
             data : articleData,
             msg : "success"

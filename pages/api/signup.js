@@ -40,7 +40,7 @@ handler.post( async (req, res) => {
                     hashPw = hash
                     console.log(hashPw)
                     let siupSql = ""
-                    siupSql += "INSERT INTO sample_sign_up(name , email , password) values ( ? , ? , ?)"
+                    siupSql += "INSERT INTO cid_n_member(name , email , password) values ( ? , ? , ?)"
             
                     let siupUpData = await executeQuery(siupSql , [name , email , hashPw]);
 

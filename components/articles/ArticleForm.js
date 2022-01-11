@@ -8,7 +8,7 @@ export default function ArticleForm(){
     const router = useRouter();
 
     const [auth , setAuth] = useAtom(authAtom)
-  
+    console.log("auth auth auth " , auth)
     return(
         <div className="container mb-2">
             <h1 className="font-bold text-xl">글 작성하기</h1>
@@ -16,7 +16,7 @@ export default function ArticleForm(){
 
             <Formik 
                 initialValues={{
-                    no : auth.user.no,
+                    no : auth.user.mem_no,
                     title : '',
                     content : '',
                 }}

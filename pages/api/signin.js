@@ -30,7 +30,7 @@ handler.post( async (req , res) => {
             msg = "success"
 
             //로그인 성공시 토큰 생성
-            let token = jwt.sign({email : email} , jwtSecretKey , {expiresIn : '10d'})
+            let token = jwt.sign({email : email} , jwtSecretKey , {expiresIn : '15d'})
             console.log('123123' , token)
             //토큰 생성후 데이터 베이스 저장
             let signToken = "";

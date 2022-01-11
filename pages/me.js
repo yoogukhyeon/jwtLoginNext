@@ -4,6 +4,7 @@ import authAtom from "../stores/authAtom"
 import Cookies from 'universal-cookie';
 export default function Me(){
     const [auth , setAuth] = useAtom(authAtom);
+    
     console.log("auth" , auth)
     return(
         <Header>

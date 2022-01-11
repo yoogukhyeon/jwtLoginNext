@@ -11,7 +11,7 @@ handler.get(async (req , res) => {
 
     try{
          let articleSql = "";
-         articleSql += "select no , mem_no , title , content, (select name from sample_sign_up as ssu where ssu.no = sa.mem_no ) as name , date_format(reg_date , '%Y-%m-%d') as regDate from sample_article sa order by reg_date DESC";
+         articleSql += "select no , mem_no , title , content, (select mem_name from cid_n_member cnm where cnm.mem_no = sa.mem_no) as name , date_format(reg_date , '%Y-%m-%d') as regDate from sample_article sa order by reg_date DESC";
 
          let articleData = await executeQuery(articleSql , []);
         

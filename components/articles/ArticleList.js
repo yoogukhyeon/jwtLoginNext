@@ -13,16 +13,16 @@ export default function ArticleList({title}){
     const [auth , setAuth] = useAtom(authAtom)
  
 
-    const {data , error} = useFetch(`${process.env.API_HOST}/api/articles/articledata`)
+    const {data , error} = useFetch(`http://localhost:4000/api/articles/articledata`)
     if(error){
         return <>데이터를 불러올 수 없습니다.</>
     }
-
-
+    
+    console.log("data" , data?.data)
     const Delete = (id , e) => {
         e.preventDefault();
         if(!confirm('정말로 삭제 하시겠습니까?')) return false
-        axios.delete(`${process.env.API_HOST}/api/articles/${id}`)
+        axios.delete(`http://localhost:4000/api/articles/${id}`)
              .then(res => {
                  console.log('delte 로직')
                  console.log(res)
